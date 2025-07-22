@@ -1,0 +1,198 @@
+npm install vite-plugin-csp@latest @vueuse/head@latest : installer dans le projet
+
+ npm install vite-plugin-csp @vueuse/head --save-dev   : installer dans le projet
+
+
+pourle signiature: 
+
+cd C:\Users\USER\Desktop\stone\frontend
+npm install signature_pad @types/signature_pad
+
+cd C:\Users\USER\Desktop\stone\backend
+npm install pdf-lib @types/pdf-lib
+
+
+
+Prochaines Étapes Recommandées
+Tests complets :
+
+bash
+# Dans le dossier backend
+npx jest --coverage
+Journalisation :
+Ajoutez dans archiving.service.ts :
+
+typescript
+console.log(`Document archivé avec ID: ${documentId}`);
+Monitoring :
+
+Surveillez le dossier secure_archive
+
+Vérifiez régulièrement les logs
+
+Commandes Utiles pour le Projet
+Action	Commande
+Lancer le backend	npm start
+Lancer le frontend	npm run dev
+Vérifier les types	npx tsc --noEmit
+Si vous souhaitez approfondir certains aspects (comme l'ajout d'un horodatage certifié ou l'intégration avec un HSM), je reste à votre disposition. Bon développement avec votre système de signature électronique ! 🚀
+
+
+
+
+a ajouter
+
+Fichier sonar-project.properties (dans chaque projet) :
+
+properties
+sonar.projectKey=stone-backend  # ou stone-frontend
+sonar.sourceEncoding=UTF-8
+sonar.sources=src
+sonar.exclusions=**/node_modules/**,**/dist/**
+sonar.tests=src
+sonar.test.inclusions=**/*.test.ts,**/*.spec.ts
+sonar.typescript.lcov.reportPaths=coverage/lcov.info
+
+
+
+
+Ajoutez aux package.json :
+
+json
+{
+  "scripts": {
+    "sonar:scan": "sonar-scanner -Dsonar.projectKey=stone -Dsonar.sources=. -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=${SONAR_TOKEN}"
+  }
+}
+
+
+
+
+
+
+
+
+ Docker Compose pour SonarQube
+docker-compose.sonar.yml :
+
+yaml
+version: '3'
+services:
+  sonarqube:
+    image: sonarqube:lts-community
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+    networks:
+      - stone-net
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+
+networks:
+  stone-net:
+    external: true
+4. Pipeline Complet Intégré
+groovy
+pipeline {
+    agent any
+    environment {
+        // ... variables existantes ...
+        SONARQUBE_SCANNER = 'sonar-scanner'
+    }
+    stages {
+        // ... étapes existantes ...
+
+        stage('SSL Certificate') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    sh '''
+                    docker run -it --rm --name certbot \
+                    -v "/etc/letsencrypt:/etc/letsencrypt" \
+                    -v "/var/lib/letsencrypt:/var/lib/letsencrypt" \
+                    -p 80:80 certbot/certbot certonly \
+                    --standalone -d votredomaine.com \
+                    --non-interactive --agree-tos \
+                    --email admin@votredomaine.com --expand
+                    '''
+                }
+            }
+        }
+
+        stage('Code Analysis') {
+            parallel {
+                stage('Backend Analysis') {
+                    steps {
+                        dir(env.BACKEND_DIR) {
+                            withSonarQubeEnv('SonarQube-Server') {
+                                sh 'npm run sonar:scan'
+                            }
+                        }
+                    }
+                }
+                stage('Frontend Analysis') {
+                    steps {
+                        dir(env.FRONTEND_DIR) {
+                            withSonarQubeEnv('SonarQube-Server') {
+                                sh 'npm run sonar:scan'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // ... autres étapes ...
+    }
+}
+Bonnes Pratiques Complémentaires
+Pour Let's Encrypt :
+
+Automatisez le renouvellement avec un cron job :
+
+bash
+0 3 * * * certbot renew --quiet --post-hook "docker restart nginx-container"
+Pour SonarQube :
+
+Configurez des Quality Gates spécifiques dans SonarQube
+
+Ajoutez des règles personnalisées pour :
+
+Détection des vulnérabilités de sécurité (OWASP Top 10)
+
+Dette technique
+
+Couverture de code (>80%)
+
+Exemple de qualité gate :
+
+Allez dans SonarQube > Quality Gates
+
+Créez une gate "Stone-Standard" avec :
+
+Couverture de code > 80%
+
+Vulnerabilities = 0
+
+Bugs < 10
+
+Security Hotspots < 5
+
+Cette configuration vous donne une pipeline CI/CD complète avec :
+
+Chiffrement SSL/TLS automatisé
+
+Analyse statique de code
+
+Contrôle qualité automatisé
+
+Déploiement sécurisé
+

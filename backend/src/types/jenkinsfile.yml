@@ -1,0 +1,127 @@
+pipeline {
+    agent any
+    environment {
+        NODE_VERSION = '18.x'
+        BACKEND_DIR = 'backend'
+        FRONTEND_DIR = 'frontend'
+        DOCKER_REGISTRY = 'votre-registry'
+        DEPLOY_ENV = 'production'
+    }
+    stages {
+        stage('Setup') {
+            steps {
+                sh 'node --version'
+                sh 'npm --version'
+                sh 'docker --version'
+            }
+        }
+        
+        // Backend Stages
+        stage('Backend: Install & Test') {
+            steps {
+                dir(env.BACKEND_DIR) {
+                    sh 'npm ci'
+                    sh 'npm run test -- --coverage'
+                }
+            }
+        }
+        
+        stage('Backend: Build') {
+            steps {
+                dir(env.BACKEND_DIR) {
+                    sh 'npm run build'
+                    sh 'tar -czf backend-build.tar.gz dist/'
+                    archiveArtifacts artifacts: 'backend-build.tar.gz', fingerprint: true
+                }
+            }
+        }
+        
+        // Frontend Stages
+        stage('Frontend: Install & Test') {
+            steps {
+                dir(env.FRONTEND_DIR) {
+                    sh 'npm ci'
+                    sh 'npm run test'
+                    sh 'npm run type-check'
+                }
+            }
+            stage('SSL Setup') {
+    steps {
+        sh '''
+        sudo apt-get install -y certbot
+        sudo certbot certonly --standalone -d votredomaine.com --non-interactive --agree-tos --email admin@votredomaine.com
+        mkdir -p frontend/ssl
+        sudo cp -Lr /etc/letsencrypt/live/votredomaine.com frontend/ssl/
+        '''
+    }
+}
+        }
+        
+        stage('Frontend: Build') {
+            steps {
+                dir(env.FRONTEND_DIR) {
+                    sh 'npm run build'
+                    archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
+                }
+            }
+        }
+        
+        // Dockerization
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    docker.build("${env.DOCKER_REGISTRY}/stone-backend:${env.BUILD_NUMBER}", "--file ${env.BACKEND_DIR}/Dockerfile .")
+                    docker.build("${env.DOCKER_REGISTRY}/stone-frontend:${env.BUILD_NUMBER}", "--file ${env.FRONTEND_DIR}/Dockerfile .")
+                }
+            }
+        }
+        
+        // Deployment
+        stage('Deploy') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    // Déploiement Kubernetes (exemple)
+                    sh "kubectl apply -f k8s/${env.DEPLOY_ENV}/backend-deployment.yaml"
+                    sh "kubectl apply -f k8s/${env.DEPLOY_ENV}/frontend-deployment.yaml"
+                    
+                    // Ou déploiement Docker Swarm
+                    sh "docker stack deploy -c docker-compose.prod.yml stone"
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            slackSend(color: 'good', message: "Build ${env.BUILD_NUMBER} succeeded!")
+        }
+        failure {
+            slackSend(color: 'danger', message: "Build ${env.BUILD_NUMBER} failed!")
+        }
+    }
+    stage('Code Quality') {
+    steps {
+        withSonarQubeEnv('SonarQube-Server') {
+            dir(env.BACKEND_DIR) {
+                sh 'npm run sonar:scan'
+            }
+            dir(env.FRONTEND_DIR) {
+                sh 'npm run sonar:scan'
+            }
+        }
+    }
+}
+
+stage('Quality Gate') {
+    steps {
+        timeout(time: 5, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+        }
+    }
+}
+}

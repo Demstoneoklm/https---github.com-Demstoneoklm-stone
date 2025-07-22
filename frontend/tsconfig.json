@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "lib": [
+            "esnext",
+            "dom"
+        ],
+        "allowJs": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+        "types": [
+            "vite/client",
+            "@types/node",
+            "vue"
+        ], // ✅ Ajouté "vue"
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "src/*"
+            ]
+        },
+        "outDir": "./dist", // ✅ Répertoire de sortie
+        "noEmit": true // ✅ Pas d’émission de fichiers (utile pour Vite)
+    },
+    "include": [
+        "src/**/*", // ✅ Plus précis que "src"
+        "env.d.ts",
+        "**/*.vue"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
