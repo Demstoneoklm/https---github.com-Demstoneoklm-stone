@@ -1,12 +1,15 @@
 import { Router } from 'express';
-import authRoutes from './auth.routes'; // ✅ Import des routes d'auth
+import { register, login } from '@/controllers/auth.controller';
+import { validateRequest } from '@/middlewares/validation.middleware';
+import { loginSchema, registerSchema } from '../schemas/auth.schema';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-    res.json({ message: "API Stone Admin" });
-});
+// Routes publiques
+router.post('/register', validateRequest(registerSchema), register);
+router.post('/login', validateRequest(loginSchema), login);
 
-router.use('/auth', authRoutes); // ✅ Ajout du sous-routeur /auth
+// Routes protégées (à ajouter plus tard)
+// router.use(authenticateToken);
 
 export default router;

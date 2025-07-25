@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "ESNext",
-        "module": "NodeNext", // Corrigé pour correspondre à moduleResolution
+        "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "lib": [
             "ESNext",
@@ -17,10 +17,10 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
-        "baseUrl": ".",
+        "baseUrl": "./src",
         "paths": {
             "@/*": [
-                "./src/*"
+                "./*"
             ]
         },
         "noEmit": true,
@@ -28,15 +28,12 @@
         "jsx": "preserve",
         "resolveJsonModule": true
     },
-    "vueCompilerOptions": { // Déplacé à la racine
+    "vueCompilerOptions": {
         "target": 3.3
     },
     "include": [
-        "src/**/*.ts",
-        "src/**/*.d.ts",
-        "src/**/*.tsx",
-        "src/**/*.vue",
-        "env.d.ts"
+        "src/**/*",
+        "src/types/global.d.ts"
     ],
     "exclude": [
         "node_modules",
