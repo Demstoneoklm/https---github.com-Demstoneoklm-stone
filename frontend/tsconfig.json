@@ -1,38 +1,45 @@
 {
     "compilerOptions": {
-        "target": "esnext",
-        "module": "esnext",
-        "moduleResolution": "node",
+        "target": "ESNext",
+        "module": "NodeNext", // Corrigé pour correspondre à moduleResolution
+        "moduleResolution": "NodeNext",
         "lib": [
-            "esnext",
-            "dom"
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
         ],
-        "allowJs": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "skipLibCheck": true,
         "types": [
             "vite/client",
-            "@types/node",
             "vue"
-        ], // ✅ Ajouté "vue"
+        ],
+        "strict": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
         "baseUrl": ".",
         "paths": {
             "@/*": [
-                "src/*"
+                "./src/*"
             ]
         },
-        "outDir": "./dist", // ✅ Répertoire de sortie
-        "noEmit": true // ✅ Pas d’émission de fichiers (utile pour Vite)
+        "noEmit": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "resolveJsonModule": true
+    },
+    "vueCompilerOptions": { // Déplacé à la racine
+        "target": 3.3
     },
     "include": [
-        "src/**/*", // ✅ Plus précis que "src"
-        "env.d.ts",
-        "**/*.vue"
+        "src/**/*.ts",
+        "src/**/*.d.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue",
+        "env.d.ts"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "dist"
     ]
 }

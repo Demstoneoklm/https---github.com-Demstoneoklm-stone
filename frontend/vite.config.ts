@@ -1,32 +1,32 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import path from 'path';
-import { csp } from 'vite-plugin-csp';
-import { createHead } from '@vueuse/head'; // À utiliser dans le code Vue, pas ici
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { fileURLToPath, URL } from 'node:url'
+import csp from 'vite-plugin-csp'
 
 export default defineConfig({
     plugins: [
         vue(),
         csp({
-            policies: {
-                'default-src': ["'self'"],
-                'script-src': ["'self'", "'unsafe-inline'"], // À restreindre davantage en production
-                'style-src': ["'self'", "'unsafe-inline'"],
-                'img-src': ["'self'", "data:"],
-                'connect-src': ["'self'", "your-api-domain.com"]
+            policy: {
+                'default-src': ["self"],
+                'script-src': ["self", "unsafe-inline"],
+                'style-src': ["self", "unsafe-inline"],
+                'img-src': ["self", "data:"],
+                'connect-src': ["self", "http://localhost:3000", "https://votre-api.com"]
             }
         })
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './src')
+            '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     },
+    server: {
+        port: 5173,
+        strictPort: true
+    },
     build: {
-        rollupOptions: {
-            input: {
-                main: './src/main.ts'
-            }
-        }
+        outDir: './dist',
+        emptyOutDir: true
     }
-});
+})
