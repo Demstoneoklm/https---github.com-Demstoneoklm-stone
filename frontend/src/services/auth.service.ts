@@ -1,5 +1,3 @@
-// frontend/src/services/auth.service.ts
-
 interface AuthResponse {
     token: string;
     user: {
@@ -27,4 +25,21 @@ export const loginUser = async (credentials: { email: string; password: string }
     }
 
     return await response.json() as AuthResponse;
+};
+
+export const registerUser = async (userData: {
+    email: string;
+    password: string;
+    firstName?: string;
+    lastName?: string;
+}) => {
+    const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+    });
+
+    if (!response.ok) throw new Error(await response.text());
+
+    return await response.json();
 };

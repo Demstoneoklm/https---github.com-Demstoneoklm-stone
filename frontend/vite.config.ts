@@ -4,6 +4,9 @@ import { fileURLToPath, URL } from 'node:url'
 import csp from 'vite-plugin-csp'
 
 export default defineConfig({
+    define: {
+        'process.env': process.env
+    },
     plugins: [
         vue(),
         csp({
