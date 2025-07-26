@@ -1,44 +1,41 @@
 import express from 'express';
 import { config } from 'dotenv';
-import cors from 'cors'; // ✅ Import de CORS
+import cors from 'cors';
 import routes from './routes';
-import { sequelize } from './config/database';
-import User from './models/User.model'; // ✅ Ajout de l'import du modèle
-import signatureRoutes from './routes/signature.routes'; // Ajout de l'import de signatureRoutes
+import signatureRoutes from './routes/signature.routes';
+import { connectDB } from './config/database';
 
 config(); // Charge les variables d'environnement
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ Configuration CORS AVANT les routes
+// ✅ Configuration CORS
 app.use(cors({
-    origin: 'http://localhost:3000', // ✅ Adresse de ton frontend
-    credentials: true
+    origin: 'http://localhost:3000', // ✅ Adresse frontend
+    credentials: true,
 }));
 
-// Middleware de base
+// ✅ Middleware Express
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// ✅ Routes
 app.use('/api', routes);
-app.use('/api/signature', signatureRoutes); // Ajout de la route pour signature
+app.use('/api/signature', signatureRoutes);
 
-// 🔁 Synchronisation DB + Démarrage serveur
-sequelize.sync({ force: true }) // ⚠️ ATTENTION : supprime et recrée toutes les tables
-    .then(() => {
-        console.log('✅ Toutes les tables ont été créées');
+// ✅ Lancement du serveur après connexion DB
+const startServer = async () => {
+    try {
+        await connectDB();
 
-        // 🔁 Deuxième synchronisation safe
-        return sequelize.sync({ alter: true });
-    })
-    .then(() => {
-        console.log('✅ Modèles synchronisés (mode safe)');
         app.listen(PORT, () => {
-            console.log(`Serveur démarré sur http://localhost:${PORT}`);
+            console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
         });
-    })
-    .catch((err) => {
-        console.error('❌ Échec de la synchronisation des modèles :', err);
-    });
+    } catch (err) {
+        console.error('❌ Erreur lors du démarrage du serveur :', err);
+        process.exit(1);
+    }
+};
+
+startServer();
