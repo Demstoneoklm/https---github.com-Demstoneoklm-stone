@@ -170,7 +170,6 @@
     "type-check": "^0.4.0",
     "type-detect": "^4.1.0",
     "type-fest": "^0.20.2",
-    "typescript": "^5.8.3",
     "ufo": "^1.6.1",
     "undici-types": "^6.21.0",
     "uri-js": "^4.4.1",
@@ -183,7 +182,6 @@
     "vue-eslint-parser": "^9.4.3",
     "vue-router": "^4.5.1",
     "vue-template-compiler": "^2.7.16",
-    "vue-tsc": "^1.8.27",
     "which": "^2.0.2",
     "why-is-node-running": "^2.3.0",
     "word-wrap": "^1.2.5",
@@ -191,7 +189,11 @@
     "xml-name-validator": "^4.0.0",
     "yocto-queue": "^0.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "typescript": "^5.8.3",
+    "vue-tsc": "^3.0.4"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

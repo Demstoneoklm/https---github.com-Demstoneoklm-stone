@@ -9,16 +9,23 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "esModuleInterop": true,
+        "skipLibCheck": true,
+        "noEmit": true,
+        "allowImportingTsExtensions": true,
         "lib": [
             "ESNext",
-            "DOM"
+            "DOM",
+            "DOM.Iterable"
         ],
         "baseUrl": ".",
         "paths": {
             "@/*": [
                 "src/*"
             ]
-        }
+        },
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true
     },
     "include": [
         "src/**/*.ts",
