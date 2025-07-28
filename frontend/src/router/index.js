@@ -7,6 +7,7 @@ import AdminDashboard from '../views/admin/Dashboard.vue';
 import Users from '../views/admin/Users.vue';
 import Documents from '../views/admin/Documents.vue';
 import Inventory from '../views/admin/Inventory.vue';
+import LeaveManagement from '../views/admin/LeaveManagement.vue'; // Nouvelle importation
 import AddEmployee from '../views/admin/AddEmployee.vue';
 import UserDashboard from '../views/user/UserDashboard.vue';
 import Profile from '../views/user/Profile.vue';
@@ -52,6 +53,11 @@ const routes = [
         path: 'inventory',
         name: 'Inventory',
         component: Inventory,
+      },
+      {
+        path: 'leave',
+        name: 'LeaveManagement',
+        component: LeaveManagement,
       },
       {
         path: 'add-employee',

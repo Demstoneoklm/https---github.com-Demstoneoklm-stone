@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import User from '../models/User.model';
+import User from '../models/User.model'; // Revertir à l'importation directe
+import { sequelize } from '../config/database'; // Importer l'instance sequelize
 import { sendConfirmationEmail, sendWelcomeEmail } from '../services/email.service';
 import {
     generateTokens,
@@ -42,7 +43,7 @@ const authController = {
 
             // Envoi de l'email de confirmation (ne fait pas échouer l'inscription si l'email échoue)
             try {
-                await sendConfirmationEmail(email, verificationToken);
+                await sendConfirmationEmail(user.email, verificationToken);
             } catch (emailError) {
                 console.warn('⚠️  Impossible d\'envoyer l\'email de confirmation:', emailError);
             }
@@ -77,34 +78,43 @@ const authController = {
 
     login: async (req: Request, res: Response) => {
         try {
+            console.log('Tentative de connexion reçue.');
             const { email, password } = req.body;
+            console.log(`Email: ${email}, Mot de passe reçu: ${password ? '*****' : '[vide]'}`);
 
             // Recherche de l'utilisateur
             const user = await User.findOne({ where: { email } });
             if (!user) {
+                console.log('Utilisateur non trouvé pour l\'email:', email);
                 return res.status(401).json({
                     error: 'Email ou mot de passe incorrect'
                 });
             }
+            console.log('Utilisateur trouvé:', user.email);
 
             // Vérification du mot de passe
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (!isPasswordValid) {
+                console.log('Mot de passe incorrect pour l\'utilisateur:', email);
                 return res.status(401).json({
                     error: 'Email ou mot de passe incorrect'
                 });
             }
+            console.log('Mot de passe valide.');
 
             // Vérification si le compte est vérifié
             if (!user.isVerified) {
+                console.log('Compte non vérifié pour l\'utilisateur:', email);
                 return res.status(403).json({
                     error: 'Compte non vérifié',
                     message: 'Veuillez vérifier votre email avant de vous connecter'
                 });
             }
+            console.log('Compte vérifié.');
 
             // Génération des tokens
             const { accessToken, refreshToken } = generateTokens(user.id, user.email);
+            console.log('Tokens générés.');
 
             // Configuration des cookies
             const cookieOptions = {
@@ -123,6 +133,7 @@ const authController = {
                 ...cookieOptions,
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
             });
+            console.log('Cookies définis.');
 
             res.json({
                 success: true,
@@ -135,6 +146,7 @@ const authController = {
                     isVerified: user.isVerified
                 }
             });
+            console.log('Réponse de connexion envoyée.');
 
         } catch (error: unknown) {
             console.error('Erreur lors de la connexion:', error);
@@ -239,6 +251,36 @@ const authController = {
             res.status(500).json({
                 error: 'Une erreur inconnue est survenue lors de la déconnexion'
             });
+        }
+    },
+
+    getMe: async (req: Request, res: Response) => {
+        try {
+            // req.user.id est défini par le middleware d'authentification
+            const user = await User.findByPk(req.user!.id, {
+                attributes: ['id', 'email', 'firstName', 'lastName', 'role']
+            });
+
+            if (!user) {
+                return res.status(404).json({ message: 'Utilisateur non trouvé' });
+            }
+
+            res.status(200).json({
+                id: user.id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role
+            });
+        } catch (error: unknown) {
+            console.error('Erreur lors de la récupération des données utilisateur :', error);
+            if (error instanceof Error) {
+                return res.status(500).json({
+                    error: 'Erreur lors de la récupération des données utilisateur',
+                    details: process.env.NODE_ENV === 'development' ? error.message : undefined
+                });
+            }
+            res.status(500).json({ message: 'Erreur serveur' });
         }
     }
 };

@@ -3,6 +3,13 @@ import { config } from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { connectDB } from './config/database';
+// import setupAssociations from './models/associations'; // Supprimer cette importation
+
+// Supprimer les importations de tous les modèles ici
+// import User from './models/User.model';
+// import Document from './models/Document.model';
+// import InventoryItem from './models/InventoryItem.model';
+// import UserRequest from './models/UserRequest.model';
 
 import authRoutes from './routes/auth.routes';
 import adminRoutes from './routes/admin.routes';
@@ -30,6 +37,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Supprimer l'appel à setupAssociations ici
+// setupAssociations();
 
 // Routes
 app.use('/api/auth', authRoutes);

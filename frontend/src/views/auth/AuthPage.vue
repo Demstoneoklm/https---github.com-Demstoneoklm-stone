@@ -97,17 +97,7 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="register-department">Département/Service</label>
-            <select id="register-department" class="form-control" v-model="registerForm.department" required>
-              <option value="" disabled selected>Sélectionnez votre département</option>
-              <option value="hr">Ressources Humaines</option>
-              <option value="finance">Finance</option>
-              <option value="it">Informatique</option>
-              <option value="administration">Administration</option>
-              <option value="direction">Direction</option>
-            </select>
-          </div>
+          
 
           <!-- Suppression du champ Rôle -->
 
@@ -196,9 +186,20 @@ const checkPasswordStrength = () => {
 
 // Form submission handlers
 const handleLogin = async () => {
+  console.log('handleLogin function triggered.');
   try {
     await authStore.login(loginForm.value.email, loginForm.value.password);
-    router.push('/admin/dashboard'); // Redirect to dashboard after successful login
+    console.log('AuthPage: User after login:', authStore.user);
+    console.log('AuthPage: isAuthenticated after login:', authStore.isAuthenticated);
+    // Rediriger en fonction du rôle de l'utilisateur
+    if (authStore.user && authStore.user.role === 'admin') {
+      router.push('/admin/dashboard');
+    } else if (authStore.user) {
+      router.push('/user/dashboard');
+    } else {
+      // Fallback si le rôle n'est pas défini (ne devrait pas arriver)
+      router.push('/');
+    }
   } catch (error) {
     alert(error.message || 'Échec de la connexion');
   }

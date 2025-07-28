@@ -8,6 +8,12 @@ const dotenv_1 = require("dotenv");
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const database_1 = require("./config/database");
+// import setupAssociations from './models/associations'; // Supprimer cette importation
+// Supprimer les importations de tous les modèles ici
+// import User from './models/User.model';
+// import Document from './models/Document.model';
+// import InventoryItem from './models/InventoryItem.model';
+// import UserRequest from './models/UserRequest.model';
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const admin_routes_1 = __importDefault(require("./routes/admin.routes"));
 const documents_routes_1 = __importDefault(require("./routes/documents.routes"));
@@ -30,6 +36,8 @@ app.use((0, cors_1.default)({
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
+// Supprimer l'appel à setupAssociations ici
+// setupAssociations();
 // Routes
 app.use('/api/auth', auth_routes_1.default);
 app.use('/api/admin', admin_routes_1.default);

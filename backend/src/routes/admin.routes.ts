@@ -1,4 +1,3 @@
-
 import { Router } from 'express';
 import adminController from '../controllers/admin.controller';
 import { authenticateToken, authorizeAdmin } from '../middlewares/auth.middleware';
