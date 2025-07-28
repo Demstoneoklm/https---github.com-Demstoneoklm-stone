@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Configuration du transporteur email
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: process.env.EMAIL_USER,
@@ -86,7 +86,7 @@ export const sendPasswordResetEmail = async (email: string, token: string): Prom
                     Ce lien expire dans 1 heure.
                 </p>
                 <p style="color: #666; font-size: 14px;">
-                    Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.
+                    Si vous n\'avez pas demandé cette réinitialisation, ignorez cet email.
                 </p>
             </div>
         `
@@ -129,6 +129,6 @@ export const sendWelcomeEmail = async (email: string, firstName: string): Promis
         console.log(`📧 Email de bienvenue envoyé à ${email}`);
     } catch (error) {
         console.error('❌ Erreur lors de l\'envoi de l\'email:', error);
-        // Ne pas faire échouer le processus si l'email de bienvenue ne peut pas être envoyé
+        // Ne pas faire échouer le processus si l\'email de bienvenue ne peut pas être envoyé
     }
 };

@@ -1,30 +1,44 @@
 import express from 'express';
 import { config } from 'dotenv';
 import cors from 'cors';
-import routes from './routes';
-import signatureRoutes from './routes/signature.routes';
+import cookieParser from 'cookie-parser';
 import { connectDB } from './config/database';
+
+import authRoutes from './routes/auth.routes';
+import adminRoutes from './routes/admin.routes';
+import documentsRoutes from './routes/documents.routes';
+import inventoryRoutes from './routes/inventory.routes';
+import profileRoutes from './routes/profile.routes';
 
 config(); // Charge les variables d'environnement
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
-// ✅ Configuration CORS
+// Configuration CORS
 app.use(cors({
-    origin: 'http://localhost:3000', // ✅ Adresse frontend
+    origin: [
+        process.env.BASE_URL || 'http://localhost:3000',
+        'http://localhost:5173' // Vite dev server
+    ],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// ✅ Middleware Express
+// Middleware Express
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-// ✅ Routes
-app.use('/api', routes);
-app.use('/api/signature', signatureRoutes);
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/documents', documentsRoutes);
+app.use('/api/inventory', inventoryRoutes);
+app.use('/api/profile', profileRoutes);
 
-// ✅ Lancement du serveur après connexion DB
+// Lancement du serveur après connexion DB
 const startServer = async () => {
     try {
         await connectDB();

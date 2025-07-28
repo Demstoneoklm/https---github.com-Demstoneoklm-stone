@@ -1,17 +1,17 @@
 import { Router } from 'express';
-import { register, login, verifyEmail, logout } from '../controllers/auth.controller';
+import authController from '../controllers/auth.controller';
 import { validateRequest } from '../middlewares/validation.middleware';
 import { loginSchema, registerSchema } from '../schemas/auth.schema';
 
 const router = Router();
 
 // Routes publiques
-router.post('/register', validateRequest(registerSchema), register);
-router.post('/login', validateRequest(loginSchema), login);
-router.get('/verify-email', verifyEmail);
+router.post('/register', validateRequest(registerSchema), authController.register);
+router.post('/login', validateRequest(loginSchema), authController.login);
+router.get('/verify-email', authController.verifyEmail);
 
 // Routes de déconnexion
-router.post('/logout', logout);
+router.post('/logout', authController.logout);
 
 // Routes protégées (à ajouter plus tard avec middleware d'authentification)
 // router.use(authenticateToken);

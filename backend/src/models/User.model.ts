@@ -1,4 +1,3 @@
-
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../config/database';
 
@@ -12,7 +11,7 @@ interface UserAttributes {
     department?: string;
     phone?: string;
     isVerified?: boolean;
-    verificationToken?: string;
+    verificationToken?: string | null;
 }
 
 class User extends Model<UserAttributes> implements UserAttributes {
@@ -25,7 +24,7 @@ class User extends Model<UserAttributes> implements UserAttributes {
     public department!: string;
     public phone!: string;
     public isVerified!: boolean;
-    public verificationToken!: string;
+    public verificationToken!: string | null;
     
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;

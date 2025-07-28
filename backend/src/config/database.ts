@@ -24,3 +24,18 @@ export const sequelize = new Sequelize({
         updatedAt: 'updated_at'
     }
 });
+
+export const connectDB = async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('✅ Connexion à la base de données réussie');
+        // Synchronisation des modèles (en développement)
+        if (process.env.NODE_ENV !== 'production') {
+            await sequelize.sync({ alter: true });
+            console.log('📊 Modèles synchronisés avec la base de données');
+        }
+    } catch (error) {
+        console.error('❌ Erreur lors de la connexion à la base de données:', error);
+        process.exit(1);
+    }
+};
