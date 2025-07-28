@@ -18,7 +18,7 @@
     </DataTable>
 
     <Modal :is-open="isModalOpen" @close="closeModal">
-      <template #title>{{ isEditMode ? 'Modifier l\'utilisateur' : 'Ajouter un utilisateur' }}</template>
+      <template #title>{{ isEditMode ? "Modifier l'utilisateur" : "Ajouter un utilisateur" }}</template>
       <template #content>
         <UserForm :initial-data="selectedUser" :edit-mode="isEditMode" @submit="handleUserSubmit" />
       </template>
@@ -36,9 +36,8 @@ import { ref, onMounted } from 'vue';
 import DataTable from '../../components/ui/DataTable.vue';
 import Modal from '../../components/ui/Modal.vue';
 import UserForm from '../../components/forms/UserForm.vue';
-import { useAdminService } from '../../services/admin.service';
+import { adminService } from '../../services/admin.service';
 
-const adminService = useAdminService();
 const users = ref([]);
 const isModalOpen = ref(false);
 const isEditMode = ref(false);
@@ -99,4 +98,3 @@ const deleteUser = async (id) => {
 
 onMounted(fetchUsers);
 </script>
-

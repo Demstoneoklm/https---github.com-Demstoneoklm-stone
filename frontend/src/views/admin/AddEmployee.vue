@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="p-6">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Ajouter un Nouvel Employé</h1>
@@ -11,10 +9,9 @@
 
 <script setup>
 import UserForm from '../../components/forms/UserForm.vue';
-import { useAdminService } from '../../services/admin.service';
+import { adminService } from '../../services/admin.service'; // Correction ici
 import { useRouter } from 'vue-router';
 
-const adminService = useAdminService();
 const router = useRouter();
 
 const handleAddEmployee = async (userData) => {
@@ -30,4 +27,3 @@ const handleAddEmployee = async (userData) => {
   }
 };
 </script>
-

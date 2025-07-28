@@ -1,4 +1,3 @@
-
 <template>
   <div class="p-6">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Mon Dashboard</h1>
@@ -21,7 +20,7 @@ import { ref, onMounted } from 'vue';
 import StatCard from '../../components/ui/StatCard.vue';
 import { ClockIcon, DocumentTextIcon, CubeTransparentIcon } from '@heroicons/vue/24/outline';
 // Importez le service utilisateur approprié
-// import { useUserService } from '../../services/user.service'; 
+// import { userService } from '../../services/users.service'; // Correction ici
 
 const userStats = ref({
   pendingRequests: 0,
@@ -32,7 +31,7 @@ const userStats = ref({
 onMounted(async () => {
   // Ici, vous feriez un appel API pour récupérer les statistiques de l'utilisateur
   // try {
-  //   const response = await useUserService().getUserStats();
+  //   const response = await userService.getUserStats();
   //   userStats.value = response.data;
   // } catch (error) {
   //   console.error('Erreur lors du chargement des statistiques utilisateur:', error);

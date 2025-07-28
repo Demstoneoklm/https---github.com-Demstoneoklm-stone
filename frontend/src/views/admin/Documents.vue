@@ -36,9 +36,8 @@ import { ref, onMounted } from 'vue';
 import DataTable from '../../components/ui/DataTable.vue';
 import Modal from '../../components/ui/Modal.vue';
 import DocumentForm from '../../components/forms/DocumentForm.vue';
-import { useDocumentService } from '../../services/documents.service';
+import { documentService } from '../../services/documents.service';
 
-const documentService = useDocumentService();
 const documents = ref([]);
 const isModalOpen = ref(false);
 const isEditMode = ref(false);

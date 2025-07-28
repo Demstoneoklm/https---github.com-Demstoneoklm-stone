@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="p-6">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Mes Demandes</h1>
@@ -61,9 +59,8 @@
 import { ref, onMounted } from 'vue';
 import DataTable from '../../components/ui/DataTable.vue';
 import Modal from '../../components/ui/Modal.vue';
-import { useProfileService } from '../../services/profile.service';
+import { profileService } from '../../services/profile.service'; // Correction ici
 
-const profileService = useProfileService();
 const userRequests = ref([]);
 const isModalOpen = ref(false);
 const newRequest = ref({
@@ -121,4 +118,3 @@ const getStatusClass = (status) => {
 
 onMounted(fetchUserRequests);
 </script>
-

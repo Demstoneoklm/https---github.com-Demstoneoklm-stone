@@ -1,4 +1,3 @@
-
 <template>
   <div class="p-6">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard Admin</h1>
@@ -22,9 +21,8 @@
 import { ref, onMounted } from 'vue';
 import StatCard from '../../components/ui/StatCard.vue';
 import { UsersIcon, DocumentTextIcon, CubeTransparentIcon, ClockIcon } from '@heroicons/vue/24/outline';
-import { useAdminService } from '../../services/admin.service';
+import { adminService } from '../../services/admin.service'; // Correction ici
 
-const adminService = useAdminService();
 const stats = ref({
   totalUsers: 0,
   totalDocuments: 0,

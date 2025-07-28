@@ -1,4 +1,3 @@
-
 <template>
   <div class="p-6">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Mon Profil</h1>
@@ -13,9 +12,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import UserForm from '../../components/forms/UserForm.vue';
-import { useProfileService } from '../../services/profile.service';
+import { profileService } from '../../services/profile.service'; // Correction ici
 
-const profileService = useProfileService();
 const userProfile = ref(null);
 
 onMounted(async () => {

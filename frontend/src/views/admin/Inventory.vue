@@ -1,5 +1,4 @@
 
-
 <template>
   <div class="p-6">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Gestion de l'Inventaire</h1>
@@ -18,7 +17,7 @@
     </DataTable>
 
     <Modal :is-open="isModalOpen" @close="closeModal">
-      <template #title>{{ isEditMode ? 'Modifier l\'article' : 'Ajouter un article' }}</template>
+      <template #title>{{ isEditMode ? "Modifier l'article" : "Ajouter un article" }}</template>
       <template #content>
         <InventoryForm :initial-data="selectedItem" :edit-mode="isEditMode" @submit="handleItemSubmit" />
       </template>
@@ -36,9 +35,8 @@ import { ref, onMounted } from 'vue';
 import DataTable from '../../components/ui/DataTable.vue';
 import Modal from '../../components/ui/Modal.vue';
 import InventoryForm from '../../components/forms/InventoryForm.vue';
-import { useInventoryService } from '../../services/inventory.service';
+import { inventoryService } from '../../services/inventory.service';
 
-const inventoryService = useInventoryService();
 const inventoryItems = ref([]);
 const isModalOpen = ref(false);
 const isEditMode = ref(false);
@@ -99,4 +97,3 @@ const deleteItem = async (id) => {
 
 onMounted(fetchInventoryItems);
 </script>
-

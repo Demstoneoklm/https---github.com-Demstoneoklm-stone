@@ -1,10 +1,8 @@
-
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 
 // Import des vues
-import Login from '../views/auth/Login.vue';
-import Register from '../views/auth/Register.vue';
+import AuthPage from '../views/auth/AuthPage.vue'; // Nouvelle page d'authentification
 import AdminDashboard from '../views/admin/Dashboard.vue';
 import Users from '../views/admin/Users.vue';
 import Documents from '../views/admin/Documents.vue';
@@ -23,12 +21,12 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login,
+    component: AuthPage,
   },
   {
     path: '/register',
     name: 'Register',
-    component: Register,
+    component: AuthPage, // Utilise la même page pour l'inscription
   },
   {
     path: '/admin',
@@ -88,7 +86,7 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import('../views/NotFound.vue'), // Créez cette vue si nécessaire
+    component: () => import('../views/NotFound.vue'),
   },
 ];
 
