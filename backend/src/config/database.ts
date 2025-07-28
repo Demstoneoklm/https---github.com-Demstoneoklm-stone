@@ -1,33 +1,26 @@
-import mysql from 'mysql2/promise';
+import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'root',
+export const sequelize = new Sequelize({
     database: process.env.DB_NAME || 'stone_admin',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-});
-
-// Test de la connexion
-export const connectDB = async () => {
-    try {
-        const connection = await pool.getConnection();
-        console.log('✅ Connexion à la base de données réussie.');
-        connection.release();
-    } catch (error) {
-        console.error('❌ Impossible de se connecter à la base de données :', error);
-        throw error;
+    username: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'root',
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '3306'),
+    dialect: 'mysql',
+    logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+    },
+    define: {
+        underscored: true, // Utilise snake_case pour les noms de colonnes
+        timestamps: true,
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
     }
-};
-
-export const query = async (sql: string, params?: any[]) => {
-    const [results] = await pool.execute(sql, params);
-    return results;
-};
-
-export { pool };
+});
