@@ -20,7 +20,16 @@ exports.registerSchema = zod_1.z.object({
         .string()
         .min(1, 'Le nom est requis')
         .max(50, 'Le nom ne peut pas dépasser 50 caractères')
-        .trim()
+        .trim(),
+    department: zod_1.z
+        .enum(['hr', 'finance', 'it', 'operations', 'other'])
+        .optional(), // Rendre optionnel si non toujours requis
+    role: zod_1.z
+        .enum(['admin', 'manager', 'employee', 'guest'])
+        .default('employee'), // Définir un rôle par défaut
+    acceptedTerms: zod_1.z
+        .boolean()
+        .refine(val => val === true, 'Vous devez accepter les conditions d\'utilisation'),
 });
 exports.loginSchema = zod_1.z.object({
     email: zod_1.z

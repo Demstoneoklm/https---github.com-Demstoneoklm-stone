@@ -11,7 +11,7 @@ const authController = {
     register: async (req, res) => {
         try {
             // Validation déjà effectuée par le middleware
-            const { email, password, firstName, lastName } = req.body;
+            const { email, password, firstName, lastName, department, role, acceptedTerms } = req.body;
             // Vérification de l'utilisateur existant
             const existingUser = await User_model_1.User.findOne({ where: { email } });
             if (existingUser) {
@@ -30,9 +30,11 @@ const authController = {
                 password: hashedPassword,
                 firstName,
                 lastName,
-                role: 'user', // Default role for new registrations
+                department,
+                role: role || 'employee', // Utilise le rôle du schéma ou 'employee' par défaut
                 verificationToken,
-                isVerified: false
+                isVerified: false,
+                // acceptedTerms est géré par le frontend et n'est pas stocké directement dans le modèle User
             });
             // Envoi de l'email de confirmation (ne fait pas échouer l'inscription si l'email échoue)
             try {

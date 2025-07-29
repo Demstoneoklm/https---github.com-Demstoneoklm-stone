@@ -43,7 +43,14 @@ const handleLogin = async () => {
   error.value = '';
   try {
     await authStore.login({ email: email.value, password: password.value });
-    router.push('/admin'); // Redirige vers le tableau de bord admin
+    if (authStore.user && authStore.user.role === 'admin') {
+      router.push('/admin');
+    } else if (authStore.user) {
+      router.push('/user-dashboard'); // Redirige vers le tableau de bord utilisateur
+    } else {
+      // Gérer le cas où l'utilisateur n'est pas défini après la connexion (devrait pas arriver)
+      router.push('/login');
+    }
   } catch (err: any) {
     console.error('Login error:', err);
     error.value = err.message || 'Échec de la connexion. Veuillez vérifier vos identifiants.';

@@ -11,6 +11,17 @@ interface User {
     role?: string;
 }
 
+interface RegisterForm {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  department?: string;
+  role?: string;
+  acceptedTerms: boolean;
+}
+
 export const useAuthStore = defineStore('auth', () => {
     const user = ref<User | null>(null);
     const token = ref(localStorage.getItem('token') || '');
@@ -29,9 +40,11 @@ export const useAuthStore = defineStore('auth', () => {
         }
     };
 
-    const register = async (credentials: { email: string; password: string }) => {
+    const register = async (formData: RegisterForm) => {
         try {
-            const response = await registerUser(credentials);
+            // On ne passe que les champs nécessaires à registerUser
+            const { confirmPassword, ...userDataToSend } = formData;
+            const response = await registerUser(userDataToSend);
             token.value = response.token;
             user.value = response.user;
             localStorage.setItem('token', token.value);

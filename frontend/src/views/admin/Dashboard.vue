@@ -97,11 +97,6 @@
             </div>
           </router-link>
 
-          <div class="action-card">
-            <span class="material-icons">note_add</span>
-            <h4>Nouveau Document</h4>
-            <p>Créer un acte administratif</p>
-          </div>
         </div>
       </div>
 

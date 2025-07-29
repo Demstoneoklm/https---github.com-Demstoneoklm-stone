@@ -18,7 +18,16 @@ export const registerSchema = z.object({
         .string()
         .min(1, 'Le nom est requis')
         .max(50, 'Le nom ne peut pas dépasser 50 caractères')
-        .trim()
+        .trim(),
+    department: z
+        .enum(['hr', 'finance', 'it', 'operations', 'other'])
+        .optional(), // Rendre optionnel si non toujours requis
+    role: z
+        .enum(['admin', 'manager', 'employee', 'guest'])
+        .default('employee'), // Définir un rôle par défaut
+    acceptedTerms: z
+        .boolean()
+        .refine(val => val === true, 'Vous devez accepter les conditions d\'utilisation'),
 });
 
 export const loginSchema = z.object({

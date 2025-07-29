@@ -54,6 +54,12 @@ const router = createRouter({
                 // Add other admin routes here
             ],
         },
+        {
+            path: '/user-dashboard',
+            name: 'user-dashboard',
+            component: () => import('../views/UserDashboardView.vue'),
+            meta: { requiresAuth: true, isUser: true }, // Nouvelle méta pour les utilisateurs standards
+        },
         // Fallback route for 404
         {
             path: '/:pathMatch(.*)*',
@@ -71,8 +77,13 @@ router.beforeEach((to) => {
     }
     // Redirect non-admins if the route requires isAdmin
     if (to.meta.isAdmin && auth.user?.role !== 'admin') {
-        // You can redirect to an access denied page or the dashboard
-        return '/admin'; // Or another appropriate page
+        // Si l'utilisateur n'est pas admin et essaie d'accéder à une page admin, rediriger vers le tableau de bord utilisateur
+        return '/user-dashboard'; 
+    }
+    // Redirect non-users if the route requires isUser (and not admin)
+    if (to.meta.isUser && auth.user?.role === 'admin') {
+        // Si l'utilisateur est admin et essaie d'accéder à une page utilisateur, rediriger vers le tableau de bord admin
+        return '/admin';
     }
 });
 

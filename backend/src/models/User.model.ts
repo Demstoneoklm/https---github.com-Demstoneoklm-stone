@@ -98,7 +98,7 @@ export function initializeUser(sequelizeInstance: Sequelize) {
         },
       },
       role: {
-        type: DataTypes.ENUM('admin', 'manager', 'employee', 'guest'), // Updated ENUM
+        type: DataTypes.ENUM('admin', 'manager', 'employee', 'guest', 'user'), // AJOUT DE 'user' ICI
         allowNull: false,
         defaultValue: 'employee',
       },

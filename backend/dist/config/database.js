@@ -92,7 +92,7 @@ const connectDB = async () => {
         await (0, exports.initializeModels)();
         // Synchronisation des modèles (en développement)
         if (process.env.NODE_ENV !== 'production') {
-            await exports.sequelize.sync({ alter: true });
+            await exports.sequelize.sync({ force: true });
             console.log(' Modèles synchronisés avec la base de données');
         }
     }

@@ -1,4 +1,3 @@
-
 <template>
   <div class="container flex min-h-screen">
     <aside class="sidebar w-72 bg-gray-900 text-white p-5">
@@ -46,49 +45,9 @@
 
     <main class="content flex-1 p-5 overflow-y-auto bg-gray-50">
       <div class="documents-header flex justify-between items-center mb-8">
-        <h2 class="text-2xl font-normal text-gray-700">Gestion des Documents</h2>
-        <button @click="openModal" class="btn bg-blue-600 text-white px-4 py-2 rounded-md flex items-center hover:bg-blue-700 transition-colors duration-300">
-          <span class="material-icons mr-1">add</span>
-          Ajouter un document
-        </button>
+        <h2 class="text-2xl font-normal text-gray-700">Ajouter un nouveau document</h2>
       </div>
-
-      <div class="documents-grid grid gap-5 mb-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <!-- Document Cards -->
-        <div v-for="doc in documents" :key="doc.id" class="document-card bg-white rounded-lg p-5 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-          <div class="document-header flex justify-between mb-4">
-            <span class="document-type text-xs px-2 py-1 rounded bg-blue-100 text-blue-700">{{ doc.type }}</span>
-            <span class="document-date text-xs text-gray-500">{{ doc.date }}</span>
-          </div>
-          <h3 class="document-title text-lg mb-2 text-gray-800">{{ doc.title }}</h3>
-          <p class="document-description text-sm text-gray-600 mb-4 leading-relaxed">{{ doc.description }}</p>
-          <div class="document-footer flex justify-between items-center">
-            <span class="document-author text-xs text-gray-500">Par: {{ doc.author }}</span>
-            <div class="document-actions">
-              <button @click="downloadDocument(doc.id)" title="Télécharger" class="text-gray-500 ml-2 hover:text-blue-600 transition-colors duration-300">
-                <span class="material-icons">download</span>
-              </button>
-              <button @click="editDocument(doc.id)" title="Modifier" class="text-gray-500 ml-2 hover:text-blue-600 transition-colors duration-300">
-                <span class="material-icons">edit</span>
-              </button>
-              <button @click="deleteDocument(doc.id)" title="Supprimer" class="text-gray-500 ml-2 hover:text-red-600 transition-colors duration-300">
-                <span class="material-icons">delete</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <!-- Modal pour ajouter un document -->
-  <div v-if="isModalOpen" class="modal fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div class="modal-content bg-white p-8 rounded-lg w-full max-w-lg">
-      <div class="modal-header flex justify-between items-center mb-5">
-        <h3 class="text-xl text-gray-800">Ajouter un nouveau document</h3>
-        <button @click="closeModal" class="close-modal text-gray-500 text-2xl cursor-pointer hover:text-gray-700">&times;</button>
-      </div>
-      <form @submit.prevent="submitDocumentForm">
+      <form @submit.prevent="submitDocumentForm" class="bg-white p-8 rounded-lg shadow-md mb-8">
         <div class="form-group mb-5">
           <label for="documentTitle" class="block mb-2 text-gray-800">Titre du document</label>
           <input type="text" id="documentTitle" v-model="form.title" required class="w-full p-3 border border-gray-300 rounded-md">
@@ -123,12 +82,40 @@
         </div>
 
         <div class="modal-footer flex justify-end mt-5">
-          <button type="button" @click="closeModal" class="btn-secondary bg-gray-400 text-white px-4 py-2 rounded-md mr-3 hover:bg-gray-500 transition-colors duration-300">Annuler</button>
           <button type="submit" class="btn bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-300">Enregistrer</button>
         </div>
       </form>
-    </div>
-  </div>
+
+      <div class="documents-header flex justify-between items-center mb-8">
+        <h2 class="text-2xl font-normal text-gray-700">Documents Existants</h2>
+      </div>
+
+      <div class="documents-grid grid gap-5 mb-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <!-- Document Cards -->
+        <div v-for="doc in documents" :key="doc.id" class="document-card bg-white rounded-lg p-5 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+          <div class="document-header flex justify-between mb-4">
+            <span class="document-type text-xs px-2 py-1 rounded bg-blue-100 text-blue-700">{{ doc.type }}</span>
+            <span class="document-date text-xs text-gray-500">{{ doc.date }}</span>
+          </div>
+          <h3 class="document-title text-lg mb-2 text-gray-800">{{ doc.title }}</h3>
+          <p class="document-description text-sm text-gray-600 mb-4 leading-relaxed">{{ doc.description }}</p>
+          <div class="document-footer flex justify-between items-center">
+            <span class="document-author text-xs text-gray-500">Par: {{ doc.author }}</span>
+            <div class="document-actions">
+              <button @click="downloadDocument(doc.id)" title="Télécharger" class="text-gray-500 ml-2 hover:text-blue-600 transition-colors duration-300">
+                <span class="material-icons">download</span>
+              </button>
+              <button @click="editDocument(doc.id)" title="Modifier" class="text-gray-500 ml-2 hover:text-blue-600 transition-colors duration-300">
+                <span class="material-icons">edit</span>
+              </button>
+              <button @click="deleteDocument(doc.id)" title="Supprimer" class="text-gray-500 ml-2 hover:text-red-600 transition-colors duration-300">
+                <span class="material-icons">delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
 </template>
 
 <script setup>
@@ -178,8 +165,6 @@ const documents = ref([
   }
 ]);
 
-// Gestion du modal
-const isModalOpen = ref(false);
 const fileInput = ref(null); // Référence pour l'input de type fichier
 
 const form = ref({
@@ -188,21 +173,6 @@ const form = ref({
   description: '',
   file: null
 });
-
-const openModal = () => {
-  isModalOpen.value = true;
-  // Réinitialiser le formulaire à l'ouverture
-  form.value = {
-    title: '',
-    type: '',
-    description: '',
-    file: null
-  };
-};
-
-const closeModal = () => {
-  isModalOpen.value = false;
-};
 
 const triggerFileInput = () => {
   fileInput.value.click();
@@ -216,7 +186,6 @@ const submitDocumentForm = () => {
   // Ici, vous ajouteriez la logique pour envoyer les données du formulaire à votre API
   console.log('Formulaire soumis:', form.value);
   alert('Document ajouté avec succès (simulé)!');
-  closeModal();
 };
 
 // Actions sur les documents (simulées)

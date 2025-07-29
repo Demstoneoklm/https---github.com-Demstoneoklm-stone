@@ -46,10 +46,6 @@
     <main class="content flex-1 p-5 overflow-y-auto bg-gray-50">
       <div class="documents-header flex justify-between items-center mb-8">
         <h2 class="text-2xl font-normal text-gray-700">Gestion des Documents</h2>
-        <button @click="openModal" class="btn bg-blue-600 text-white px-4 py-2 rounded-md flex items-center hover:bg-blue-700 transition-colors duration-300">
-          <span class="material-icons mr-1">add</span>
-          Ajouter un document
-        </button>
       </div>
 
       <div class="documents-grid grid gap-5 mb-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -80,54 +76,7 @@
     </main>
   </div>
 
-  <!-- Modal pour ajouter un document -->
-  <div v-if="isModalOpen" class="modal fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div class="modal-content bg-white p-8 rounded-lg w-full max-w-lg">
-      <div class="modal-header flex justify-between items-center mb-5">
-        <h3 class="text-xl text-gray-800">Ajouter un nouveau document</h3>
-        <button @click="closeModal" class="close-modal text-gray-500 text-2xl cursor-pointer hover:text-gray-700">&times;</button>
-      </div>
-      <form @submit.prevent="submitDocumentForm">
-        <div class="form-group mb-5">
-          <label for="documentTitle" class="block mb-2 text-gray-800">Titre du document</label>
-          <input type="text" id="documentTitle" v-model="form.title" required class="w-full p-3 border border-gray-300 rounded-md">
-        </div>
-
-        <div class="form-group mb-5">
-          <label for="documentType" class="block mb-2 text-gray-800">Type de document</label>
-          <select id="documentType" v-model="form.type" required class="w-full p-3 border border-gray-300 rounded-md">
-            <option value="">Sélectionner un type</option>
-            <option value="Contrat">Contrat</option>
-            <option value="Procédure">Procédure</option>
-            <option value="Règlement">Règlement</option>
-            <option value="Rapport">Rapport</option>
-            <option value="Annonce">Annonce</option>
-            <option value="Autre">Autre</option>
-          </select>
-        </div>
-
-        <div class="form-group mb-5">
-          <label for="documentDescription" class="block mb-2 text-gray-800">Description</label>
-          <textarea id="documentDescription" v-model="form.description" class="w-full p-3 border border-gray-300 rounded-md min-h-[100px] resize-y"></textarea>
-        </div>
-
-        <div class="form-group mb-5">
-          <label class="block mb-2 text-gray-800">Fichier</label>
-          <div @click="triggerFileInput" class="file-upload border-2 border-dashed border-gray-300 p-5 text-center rounded-md cursor-pointer hover:border-blue-600 transition-colors duration-300">
-            <span class="material-icons text-gray-500 text-3xl">cloud_upload</span>
-            <p class="text-gray-600">Glissez-déposez votre fichier ici ou cliquez pour sélectionner</p>
-            <input type="file" id="documentFile" ref="fileInput" @change="handleFileChange" style="display: none;">
-          </div>
-          <p v-if="form.file" class="text-sm text-gray-700 mt-2">Fichier sélectionné: {{ form.file.name }}</p>
-        </div>
-
-        <div class="modal-footer flex justify-end mt-5">
-          <button type="button" @click="closeModal" class="btn-secondary bg-gray-400 text-white px-4 py-2 rounded-md mr-3 hover:bg-gray-500 transition-colors duration-300">Annuler</button>
-          <button type="submit" class="btn bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-300">Enregistrer</button>
-        </div>
-      </form>
-    </div>
-  </div>
+  
 </template>
 
 <script setup>
@@ -180,67 +129,22 @@ const documents = ref([
   }
 ]);
 
-// Gestion du modal
-const isModalOpen = ref(false);
-const fileInput = ref(null); // Référence pour l'input de type fichier
-
-const form = ref({
-  title: '',
-  type: '',
-  description: '',
-  file: null
-});
-
-const openModal = () => {
-  isModalOpen.value = true;
-  // Réinitialiser le formulaire à l'ouverture
-  form.value = {
-    title: '',
-    type: '',
-    description: '',
-    file: null
-  };
-};
-
-const closeModal = () => {
-  isModalOpen.value = false;
-};
-
-const triggerFileInput = () => {
-  fileInput.value.click();
-};
-
-const handleFileChange = (event) => {
-  form.value.file = event.target.files[0];
-};
-
-const submitDocumentForm = () => {
-  // Ici, vous ajouteriez la logique pour envoyer les données du formulaire à votre API
-  console.log('Formulaire soumis:', form.value);
-  alert('Document ajouté avec succès (simulé)!');
-  closeModal();
-};
-
 // Actions sur les documents (simulées)
 const downloadDocument = (id) => {
-  alert(`Télécharger le document avec l'ID: ${id}`);
+  alert(`Télécharger le document avec l\'ID: ${id}`);
   // Logique réelle pour le téléchargement
 };
 
 const editDocument = (id) => {
-  alert(`Modifier le document avec l'ID: ${id}`);
+  alert(`Modifier le document avec l\'ID: ${id}`);
   // Logique réelle pour la modification (ouvrir le modal avec les données pré-remplies)
 };
 
 const deleteDocument = (id) => {
-  if (confirm(`Êtes-vous sûr de vouloir supprimer le document avec l'ID: ${id} ?`)) {
+  if (confirm(`Êtes-vous sûr de vouloir supprimer le document avec l\'ID: ${id} ?`)) {
     documents.value = documents.value.filter(doc => doc.id !== id);
     alert('Document supprimé (simulé)!');
   }
-};
-
-const navigateToSettings = () => {
-  router.push({ name: 'admin-settings' });
 };
 </script>
 

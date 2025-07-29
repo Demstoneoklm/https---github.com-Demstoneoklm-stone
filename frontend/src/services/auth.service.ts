@@ -32,6 +32,9 @@ export const registerUser = async (userData: {
     password: string;
     firstName?: string;
     lastName?: string;
+    department?: string; // Ajouté
+    role?: string; // Ajouté
+    acceptedTerms: boolean; // Ajouté
 }) => {
     const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
@@ -39,7 +42,10 @@ export const registerUser = async (userData: {
         body: JSON.stringify(userData)
     });
 
-    if (!response.ok) throw new Error(await response.text());
+    if (!response.ok) {
+        const errorData = await response.json(); // Tente de lire la réponse comme du JSON
+        throw new Error(errorData.message || JSON.stringify(errorData) || 'Registration failed');
+    }
 
     return await response.json();
 };
