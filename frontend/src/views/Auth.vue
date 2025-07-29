@@ -39,11 +39,13 @@
           <label for="register-password">Mot de passe</label>
           <input type="password" id="register-password" v-model="registerPassword" required />
         </div>
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="acceptedTerms" v-model="acceptedTerms" required>
+          <label for="acceptedTerms">J'accepte les termes et conditions</label>
+        </div>
         <button type="submit">S'inscrire</button>
       </form>
     </div>
-
-    <p v-if="message" :class="{ 'success': isSuccess, 'error': !isSuccess }">{{ message }}</p>
   </div>
 </template>
 
@@ -66,39 +68,34 @@ const registerFirstName = ref('');
 const registerLastName = ref('');
 const registerEmail = ref('');
 const registerPassword = ref('');
-
-const message = ref('');
-const isSuccess = ref(false);
+const acceptedTerms = ref(false); // Ajout du champ acceptedTerms
 
 const handleLogin = async () => {
-  message.value = '';
   try {
     await authStore.login(loginEmail.value, loginPassword.value);
-    isSuccess.value = true;
-    message.value = 'Connexion réussie !';
-    router.push('/admin'); // Redirige vers le tableau de bord admin
+    if (authStore.user && authStore.user.role === 'user') {
+      router.push('/citizen/dashboard');
+    } else {
+      router.push('/admin'); // Redirige vers le tableau de bord admin
+    }
   } catch (error) {
-    isSuccess.value = false;
-    message.value = authStore.error || 'Erreur lors de la connexion.';
+    console.error('Erreur lors de la connexion:', error);
   }
 };
 
 const handleRegister = async () => {
-  message.value = '';
+  console.log('Valeur de acceptedTerms avant envoi:', acceptedTerms.value);
   try {
     await authStore.register(
       registerEmail.value,
       registerPassword.value,
       registerFirstName.value,
-      registerLastName.value
+      registerLastName.value,
+      acceptedTerms.value // Inclure acceptedTerms dans l'appel à l'API
     );
-    isSuccess.value = true;
-    message.value = 'Inscription réussie ! Veuillez vérifier votre email.';
-    // Optionnel: rediriger vers la page de connexion après l'inscription
-    isLogin.value = true;
+        router.push('/citizen/login'); // Rediriger vers la page de connexion citoyenne
   } catch (error) {
-    isSuccess.value = false;
-    message.value = authStore.error || 'Erreur lors de l\'inscription.';
+    console.error('Erreur lors de l\'inscription:', error);
   }
 };
 </script>
@@ -171,6 +168,21 @@ input[type="password"] {
   box-sizing: border-box;
 }
 
+.form-group.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.form-group.checkbox-group input[type="checkbox"] {
+  width: auto;
+  margin-right: 10px;
+}
+
+.form-group.checkbox-group label {
+  margin-bottom: 0;
+}
+
 button[type="submit"] {
   width: 100%;
   padding: 10px;
@@ -184,17 +196,5 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #218838;
-}
-
-.success {
-  color: green;
-  text-align: center;
-  margin-top: 15px;
-}
-
-.error {
-  color: red;
-  text-align: center;
-  margin-top: 15px;
 }
 </style>

@@ -19,6 +19,7 @@ const admin_routes_1 = __importDefault(require("./routes/admin.routes"));
 const documents_routes_1 = __importDefault(require("./routes/documents.routes"));
 const inventory_routes_1 = __importDefault(require("./routes/inventory.routes"));
 const profile_routes_1 = __importDefault(require("./routes/profile.routes"));
+const citizen_routes_1 = __importDefault(require("./routes/citizen.routes"));
 (0, dotenv_1.config)(); // Charge les variables d'environnement
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3001;
@@ -44,6 +45,7 @@ app.use('/api/admin', admin_routes_1.default);
 app.use('/api/documents', documents_routes_1.default);
 app.use('/api/inventory', inventory_routes_1.default);
 app.use('/api/profile', profile_routes_1.default);
+app.use('/api/citizen', citizen_routes_1.default);
 // Lancement du serveur après connexion DB
 const startServer = async () => {
     try {

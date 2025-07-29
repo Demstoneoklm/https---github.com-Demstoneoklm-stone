@@ -92,7 +92,7 @@ function initializeUser(sequelizeInstance) {
         role: {
             type: sequelize_1.DataTypes.ENUM('admin', 'manager', 'employee', 'guest', 'user'), // AJOUT DE 'user' ICI
             allowNull: false,
-            defaultValue: 'employee',
+            defaultValue: 'user',
         },
         department: {
             type: sequelize_1.DataTypes.ENUM('hr', 'finance', 'it', 'operations', 'other'), // Added department

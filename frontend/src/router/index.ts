@@ -85,6 +85,11 @@ router.beforeEach((to) => {
         // Si l'utilisateur est admin et essaie d'accéder à une page utilisateur, rediriger vers le tableau de bord admin
         return '/admin';
     }
+    // Redirect non-citizens if the route requires isCitizen
+    if (to.meta.isCitizen && auth.user?.role !== 'user') {
+        // Si l'utilisateur n'est pas un citoyen et essaie d'accéder à une page citoyen, rediriger vers la page de connexion citoyen
+        return '/citizen/login';
+    }
 });
 
 export default router;

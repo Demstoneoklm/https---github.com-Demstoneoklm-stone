@@ -16,6 +16,7 @@ import adminRoutes from './routes/admin.routes';
 import documentsRoutes from './routes/documents.routes';
 import inventoryRoutes from './routes/inventory.routes';
 import profileRoutes from './routes/profile.routes';
+import citizenRoutes from './routes/citizen.routes';
 
 config(); // Charge les variables d'environnement
 
@@ -47,6 +48,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/documents', documentsRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/citizen', citizenRoutes);
 
 // Lancement du serveur après connexion DB
 const startServer = async () => {

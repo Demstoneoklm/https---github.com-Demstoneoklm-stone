@@ -12,7 +12,7 @@ interface AuthResponse {
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export const loginUser = async (credentials: { email: string; password: string }): Promise<AuthResponse> => {
-    const response = await fetch(`${API_URL}/auth/login`, {
+    const response = await fetch(`${API_URL}/citizen/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -36,7 +36,7 @@ export const registerUser = async (userData: {
     role?: string; // Ajouté
     acceptedTerms: boolean; // Ajouté
 }) => {
-    const response = await fetch(`${API_URL}/auth/register`, {
+    const response = await fetch(`${API_URL}/citizen/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData)

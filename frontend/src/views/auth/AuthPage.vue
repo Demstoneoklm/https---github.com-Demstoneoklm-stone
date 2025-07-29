@@ -55,7 +55,7 @@
       <div id="register" class="auth-content" :class="{ 'active': activeTab === 'register' }">
         <div class="auth-header">
           <h2>Créez un compte</h2>
-          <p>Remplissez le formulaire pour créer un compte administrateur</p>
+          
         </div>
 
         <form @submit.prevent="handleRegister">
