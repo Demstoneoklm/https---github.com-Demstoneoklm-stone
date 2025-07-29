@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const User_model_1 = __importDefault(require("../models/User.model")); // Revertir à l'importation directe
+const User_model_1 = require("../models/User.model");
 const email_service_1 = require("../services/email.service");
 const auth_1 = require("../utils/auth");
 const authController = {
@@ -13,7 +13,7 @@ const authController = {
             // Validation déjà effectuée par le middleware
             const { email, password, firstName, lastName } = req.body;
             // Vérification de l'utilisateur existant
-            const existingUser = await User_model_1.default.findOne({ where: { email } });
+            const existingUser = await User_model_1.User.findOne({ where: { email } });
             if (existingUser) {
                 return res.status(409).json({
                     error: 'Cet email est déjà utilisé'
@@ -25,11 +25,12 @@ const authController = {
             // Génération du token de vérification
             const verificationToken = (0, auth_1.generateEmailVerificationToken)(email, 0);
             // Création de l'utilisateur
-            const user = await User_model_1.default.create({
+            const user = await User_model_1.User.create({
                 email,
                 password: hashedPassword,
                 firstName,
                 lastName,
+                role: 'user', // Default role for new registrations
                 verificationToken,
                 isVerified: false
             });
@@ -71,7 +72,7 @@ const authController = {
             const { email, password } = req.body;
             console.log(`Email: ${email}, Mot de passe reçu: ${password ? '*****' : '[vide]'}`);
             // Recherche de l'utilisateur
-            const user = await User_model_1.default.findOne({ where: { email } });
+            const user = await User_model_1.User.findOne({ where: { email } });
             if (!user) {
                 console.log('Utilisateur non trouvé pour l\'email:', email);
                 return res.status(401).json({
@@ -153,7 +154,7 @@ const authController = {
             // Vérification du token
             const { email, userId } = (0, auth_1.verifyEmailVerificationToken)(token);
             // Recherche de l'utilisateur
-            const user = await User_model_1.default.findOne({
+            const user = await User_model_1.User.findOne({
                 where: { email, verificationToken: token }
             });
             if (!user) {
@@ -221,7 +222,7 @@ const authController = {
     getMe: async (req, res) => {
         try {
             // req.user.id est défini par le middleware d'authentification
-            const user = await User_model_1.default.findByPk(req.user.id, {
+            const user = await User_model_1.User.findByPk(req.user.id, {
                 attributes: ['id', 'email', 'firstName', 'lastName', 'role']
             });
             if (!user) {

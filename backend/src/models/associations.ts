@@ -1,7 +1,7 @@
 
-import User from './User.model';
-import Document from './Document.model';
-import UserRequest from './UserRequest.model';
+import { User } from './User.model';
+import { Document } from './Document.model';
+import { UserRequest } from './UserRequest.model';
 
 const setupAssociations = () => {
     // User - Document (One-to-Many)

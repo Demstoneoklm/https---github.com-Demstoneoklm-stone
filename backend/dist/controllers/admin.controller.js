@@ -3,10 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_model_1 = __importDefault(require("../models/User.model"));
-const Document_model_1 = __importDefault(require("../models/Document.model"));
-const InventoryItem_model_1 = __importDefault(require("../models/InventoryItem.model"));
-const UserRequest_model_1 = __importDefault(require("../models/UserRequest.model"));
+const User_model_1 = require("../models/User.model");
+const Document_model_1 = require("../models/Document.model");
+const InventoryItem_model_1 = require("../models/InventoryItem.model");
+const UserRequest_model_1 = require("../models/UserRequest.model");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 // Helper function to hash password
 const hashPassword = async (password) => {
@@ -16,7 +16,7 @@ const hashPassword = async (password) => {
 const adminController = {
     getUsers: async (req, res) => {
         try {
-            const users = await User_model_1.default.findAll({
+            const users = await User_model_1.User.findAll({
                 attributes: { exclude: ['password', 'verificationToken'] }
             });
             res.status(200).json(users);
@@ -31,12 +31,12 @@ const adminController = {
             return res.status(400).json({ message: 'Veuillez fournir au moins un email, un mot de passe, un prénom et un nom.' });
         }
         try {
-            const existingUser = await User_model_1.default.findOne({ where: { email } });
+            const existingUser = await User_model_1.User.findOne({ where: { email } });
             if (existingUser) {
                 return res.status(409).json({ message: 'Un utilisateur avec cet email existe déjà.' });
             }
             const hashedPassword = await hashPassword(password);
-            const newUser = await User_model_1.default.create({
+            const newUser = await User_model_1.User.create({
                 email,
                 password: hashedPassword,
                 firstName,
@@ -59,12 +59,12 @@ const adminController = {
         const { id } = req.params;
         const { email, firstName, lastName, role, department, phone, isVerified } = req.body;
         try {
-            const user = await User_model_1.default.findByPk(id);
+            const user = await User_model_1.User.findByPk(id);
             if (!user) {
                 return res.status(404).json({ message: 'Utilisateur non trouvé.' });
             }
             if (email && email !== user.email) {
-                const existingUser = await User_model_1.default.findOne({ where: { email } });
+                const existingUser = await User_model_1.User.findOne({ where: { email } });
                 if (existingUser) {
                     return res.status(409).json({ message: 'Cet email est déjà utilisé par un autre utilisateur.' });
                 }
@@ -91,7 +91,7 @@ const adminController = {
     deleteUser: async (req, res) => {
         const { id } = req.params;
         try {
-            const user = await User_model_1.default.findByPk(id);
+            const user = await User_model_1.User.findByPk(id);
             if (!user) {
                 return res.status(404).json({ message: 'Utilisateur non trouvé.' });
             }
@@ -104,10 +104,10 @@ const adminController = {
     },
     getDashboardStats: async (req, res) => {
         try {
-            const totalUsers = await User_model_1.default.count();
-            const totalDocuments = await Document_model_1.default.count();
-            const totalInventoryItems = await InventoryItem_model_1.default.count();
-            const pendingRequests = await UserRequest_model_1.default.count({ where: { status: 'pending' } });
+            const totalUsers = await User_model_1.User.count();
+            const totalDocuments = await Document_model_1.Document.count();
+            const totalInventoryItems = await InventoryItem_model_1.InventoryItem.count();
+            const pendingRequests = await UserRequest_model_1.UserRequest.count({ where: { status: 'pending' } });
             res.status(200).json({
                 totalUsers,
                 totalDocuments,

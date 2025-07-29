@@ -40,10 +40,10 @@ exports.connectDB = exports.initializeModels = exports.sequelize = void 0;
 const sequelize_1 = require("sequelize");
 const dotenv = __importStar(require("dotenv"));
 // Import all models directly
-const User_model_1 = __importDefault(require("../models/User.model"));
-const Document_model_1 = __importDefault(require("../models/Document.model"));
-const InventoryItem_model_1 = __importDefault(require("../models/InventoryItem.model"));
-const UserRequest_model_1 = __importDefault(require("../models/UserRequest.model"));
+const User_model_1 = require("../models/User.model");
+const Document_model_1 = require("../models/Document.model");
+const InventoryItem_model_1 = require("../models/InventoryItem.model");
+const UserRequest_model_1 = require("../models/UserRequest.model");
 const associations_1 = __importDefault(require("../models/associations")); // Also import associations directly
 dotenv.config();
 exports.sequelize = new sequelize_1.Sequelize({
@@ -70,10 +70,10 @@ exports.sequelize = new sequelize_1.Sequelize({
 const initializeModels = async () => {
     try {
         // Initialize all models
-        User_model_1.default.initialize(exports.sequelize);
-        Document_model_1.default.initialize(exports.sequelize);
-        InventoryItem_model_1.default.initialize(exports.sequelize);
-        UserRequest_model_1.default.initialize(exports.sequelize);
+        (0, User_model_1.initializeUser)(exports.sequelize);
+        Document_model_1.Document.initialize(exports.sequelize);
+        InventoryItem_model_1.InventoryItem.initialize(exports.sequelize);
+        UserRequest_model_1.UserRequest.initialize(exports.sequelize);
         // Configure associations after initialization
         (0, associations_1.default)(); // Call directly
         console.log(' Modèles initialisés avec succès');

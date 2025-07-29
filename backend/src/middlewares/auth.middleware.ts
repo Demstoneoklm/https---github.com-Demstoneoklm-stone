@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken, TokenPayload } from '../utils/auth';
-import User from '../models/User.model';
+import { User } from '../models/User.model';
 
 // Extension de l'interface Request pour inclure l'utilisateur
 declare global {

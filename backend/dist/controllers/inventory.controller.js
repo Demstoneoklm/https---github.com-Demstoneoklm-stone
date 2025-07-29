@@ -1,13 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const InventoryItem_model_1 = __importDefault(require("../models/InventoryItem.model"));
+const InventoryItem_model_1 = require("../models/InventoryItem.model");
 const inventoryController = {
     getInventoryItems: async (req, res) => {
         try {
-            const items = await InventoryItem_model_1.default.findAll();
+            const items = await InventoryItem_model_1.InventoryItem.findAll();
             res.status(200).json(items);
         }
         catch (error) {
@@ -17,7 +14,7 @@ const inventoryController = {
     createInventoryItem: async (req, res) => {
         const { name, reference, category, description, quantity, alertThreshold, supplier, location } = req.body;
         try {
-            const newItem = await InventoryItem_model_1.default.create({
+            const newItem = await InventoryItem_model_1.InventoryItem.create({
                 name,
                 reference,
                 category,
@@ -37,7 +34,7 @@ const inventoryController = {
         const { id } = req.params;
         const { name, reference, category, description, quantity, alertThreshold, supplier, location } = req.body;
         try {
-            const item = await InventoryItem_model_1.default.findByPk(id);
+            const item = await InventoryItem_model_1.InventoryItem.findByPk(id);
             if (!item) {
                 return res.status(404).json({ message: 'Élément d\'inventaire non trouvé.' });
             }
@@ -59,7 +56,7 @@ const inventoryController = {
     deleteInventoryItem: async (req, res) => {
         const { id } = req.params;
         try {
-            const item = await InventoryItem_model_1.default.findByPk(id);
+            const item = await InventoryItem_model_1.InventoryItem.findByPk(id);
             if (!item) {
                 return res.status(404).json({ message: 'Élément d\'inventaire non trouvé.' });
             }
@@ -72,8 +69,8 @@ const inventoryController = {
     },
     getInventoryStats: async (req, res) => {
         try {
-            const totalItems = await InventoryItem_model_1.default.sum('quantity');
-            const lowStockItems = await InventoryItem_model_1.default.count({ where: { quantity: { $lt: 10 } } }); // Exemple de seuil bas
+            const totalItems = await InventoryItem_model_1.InventoryItem.sum('quantity');
+            const lowStockItems = await InventoryItem_model_1.InventoryItem.count({ where: { quantity: { $lt: 10 } } }); // Exemple de seuil bas
             res.status(200).json({
                 totalItems: totalItems || 0,
                 lowStockItems

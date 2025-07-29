@@ -32,44 +32,47 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const bcrypt = __importStar(require("bcrypt"));
-const database_1 = require("../config/database");
-const User_model_1 = require("../models/User.model");
-const ADMIN_EMAIL = 'admin237@gmail.com';
-const ADMIN_PASSWORD = 'admin123AD/'; // Utilisez un mot de passe fort en production !
-const createAdminAccount = async () => {
+const sequelize_1 = require("sequelize");
+const dotenv = __importStar(require("dotenv"));
+const User_model_1 = __importDefault(require("../models/User.model"));
+dotenv.config();
+const sequelize = new sequelize_1.Sequelize({
+    database: process.env.DB_NAME || 'stone_admin',
+    username: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'root',
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '3306'),
+    dialect: 'mysql',
+    logging: false,
+});
+const UserModel = (0, User_model_1.default)(sequelize);
+const createAdminUser = async () => {
     try {
-        // Assurez-vous que la connexion à la base de données est établie et les modèles initialisés
-        await (0, database_1.connectDB)();
-        // Vérifier si l'administrateur existe déjà
-        const existingAdmin = await User_model_1.User.findOne({ where: { email: ADMIN_EMAIL } });
+        await sequelize.sync();
+        const existingAdmin = await UserModel.findOne({ where: { email: 'admin237@gmail.com' } });
         if (existingAdmin) {
-            console.log('ℹ️ Le compte administrateur existe déjà.');
+            console.log('L\'administrateur existe déjà');
             return;
         }
-        // Hasher le mot de passe
-        const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10); // 10 est le saltRounds
-        // Créer l'utilisateur administrateur
-        await User_model_1.User.create({
+        await UserModel.create({
             firstName: 'Admin',
-            lastName: 'User',
-            email: ADMIN_EMAIL,
-            password: hashedPassword,
-            role: 'admin', // Assurez-vous que votre modèle User a un champ 'role'
-            isVerified: true, // L'admin est vérifié par défaut
+            lastName: 'System',
+            email: 'admin237@gmail.com',
+            password: 'admin123AD/',
+            role: 'admin',
+            isActive: true,
         });
-        console.log('✅ Compte administrateur créé avec succès !');
+        console.log('Administrateur créé avec succès');
     }
     catch (error) {
-        console.error('❌ Erreur lors de la création du compte administrateur:', error);
+        console.error('Erreur lors de la création de l\'administrateur:', error);
     }
     finally {
-        // Fermer la connexion à la base de données
-        await database_1.sequelize.close();
-        console.log('Déconnexion de la base de données.');
-        process.exit(0); // S'assurer que le processus se termine
+        await sequelize.close();
     }
 };
-// Exécuter la fonction
-createAdminAccount();
+createAdminUser();

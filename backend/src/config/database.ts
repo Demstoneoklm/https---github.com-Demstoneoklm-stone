@@ -2,10 +2,10 @@ import { Sequelize } from 'sequelize';
 import * as dotenv from 'dotenv';
 
 // Import all models directly
-import User from '../models/User.model';
-import Document from '../models/Document.model';
-import InventoryItem from '../models/InventoryItem.model';
-import UserRequest from '../models/UserRequest.model';
+import { User, initializeUser } from '../models/User.model';
+import { Document } from '../models/Document.model';
+import { InventoryItem } from '../models/InventoryItem.model';
+import { UserRequest } from '../models/UserRequest.model';
 import setupAssociations from '../models/associations'; // Also import associations directly
 
 dotenv.config();
@@ -35,7 +35,7 @@ export const sequelize = new Sequelize({
 export const initializeModels = async () => {
     try {
         // Initialize all models
-        User.initialize(sequelize);
+        initializeUser(sequelize);
         Document.initialize(sequelize);
         InventoryItem.initialize(sequelize);
         UserRequest.initialize(sequelize);
@@ -60,7 +60,7 @@ export const connectDB = async () => {
         
         // Synchronisation des modèles (en développement)
         if (process.env.NODE_ENV !== 'production') {
-            await sequelize.sync({ alter: true });
+            await sequelize.sync({ force: true });
             console.log(' Modèles synchronisés avec la base de données');
         }
     } catch (error) {

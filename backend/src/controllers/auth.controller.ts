@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import User from '../models/User.model'; // Revertir à l'importation directe
+import { User } from '../models/User.model';
 import { sequelize } from '../config/database'; // Importer l'instance sequelize
 import { sendConfirmationEmail, sendWelcomeEmail } from '../services/email.service';
 import {
@@ -37,6 +37,7 @@ const authController = {
                 password: hashedPassword,
                 firstName,
                 lastName,
+                role: 'user', // Default role for new registrations
                 verificationToken,
                 isVerified: false
             });

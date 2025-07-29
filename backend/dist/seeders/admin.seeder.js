@@ -32,22 +32,19 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = __importStar(require("bcrypt")); // Correction ici
-const User_model_1 = __importDefault(require("../models/User.model"));
+const User_model_1 = require("../models/User.model");
 const database_1 = require("../config/database");
 const seedAdminUser = async () => {
     try {
         // Vérifier si l'utilisateur admin existe déjà
-        const existingAdmin = await User_model_1.default.findOne({ where: { email: 'admin237@gmail.com' } });
+        const existingAdmin = await User_model_1.User.findOne({ where: { email: 'admin237@gmail.com' } });
         if (!existingAdmin) {
             // Hasher le mot de passe
             const hashedPassword = await bcrypt.hash('admin123AD/', 10); // 10 est le saltRounds
             // Créer l'utilisateur admin
-            await User_model_1.default.create({
+            await User_model_1.User.create({
                 firstName: 'Admin',
                 lastName: 'User',
                 email: 'admin237@gmail.com',

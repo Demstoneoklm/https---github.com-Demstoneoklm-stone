@@ -95,4 +95,4 @@ class Document extends Model<DocumentAttributes> implements DocumentAttributes {
   }
 }
 
-export default Document;
+export { Document };

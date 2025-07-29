@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt'; // Correction ici
-import User from '../models/User.model';
+import { User } from '../models/User.model';
 import { sequelize, initializeModels } from '../config/database';
 
 const seedAdminUser = async () => {

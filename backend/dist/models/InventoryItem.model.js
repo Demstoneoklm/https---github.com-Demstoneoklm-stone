@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.InventoryItem = void 0;
 const sequelize_1 = require("sequelize");
 class InventoryItem extends sequelize_1.Model {
     static initialize(sequelize) {
@@ -67,4 +68,4 @@ class InventoryItem extends sequelize_1.Model {
         return InventoryItem;
     }
 }
-exports.default = InventoryItem;
+exports.InventoryItem = InventoryItem;

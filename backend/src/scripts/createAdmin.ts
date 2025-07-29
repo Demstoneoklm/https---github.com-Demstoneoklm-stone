@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { sequelize, connectDB } from '../config/database';
-import User from '../models/User.model';
+import { User } from '../models/User.model';
 
 const ADMIN_EMAIL = 'admin237@gmail.com';
 const ADMIN_PASSWORD = 'admin123AD/'; // Utilisez un mot de passe fort en production !

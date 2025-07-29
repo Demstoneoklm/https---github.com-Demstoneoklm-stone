@@ -97,4 +97,4 @@ class UserRequest extends Model<UserRequestAttributes> implements UserRequestAtt
   }
 }
 
-export default UserRequest;
+export { UserRequest };

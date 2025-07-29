@@ -3,13 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Document_model_1 = __importDefault(require("../models/Document.model"));
+const Document_model_1 = require("../models/Document.model");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const documentsController = {
     getDocuments: async (req, res) => {
         try {
-            const documents = await Document_model_1.default.findAll({
+            const documents = await Document_model_1.Document.findAll({
                 include: ['author']
             });
             res.status(200).json(documents);
@@ -25,7 +25,7 @@ const documentsController = {
             return res.status(400).json({ message: 'Aucun fichier n\'a été téléversé.' });
         }
         try {
-            const newDocument = await Document_model_1.default.create({
+            const newDocument = await Document_model_1.Document.create({
                 title,
                 description,
                 type,
@@ -50,7 +50,7 @@ const documentsController = {
         const { id } = req.params;
         const { title, description, type, isPublic } = req.body;
         try {
-            const document = await Document_model_1.default.findByPk(id);
+            const document = await Document_model_1.Document.findByPk(id);
             if (!document) {
                 return res.status(404).json({ message: 'Document non trouvé.' });
             }
@@ -74,7 +74,7 @@ const documentsController = {
     deleteDocument: async (req, res) => {
         const { id } = req.params;
         try {
-            const document = await Document_model_1.default.findByPk(id);
+            const document = await Document_model_1.Document.findByPk(id);
             if (!document) {
                 return res.status(404).json({ message: 'Document non trouvé.' });
             }
@@ -96,7 +96,7 @@ const documentsController = {
     downloadDocument: async (req, res) => {
         const { id } = req.params;
         try {
-            const document = await Document_model_1.default.findByPk(id);
+            const document = await Document_model_1.Document.findByPk(id);
             if (!document) {
                 return res.status(404).json({ message: 'Document non trouvé.' });
             }

@@ -95,4 +95,4 @@ class InventoryItem extends Model<InventoryItemAttributes> implements InventoryI
   }
 }
 
-export default InventoryItem;
+export { InventoryItem };

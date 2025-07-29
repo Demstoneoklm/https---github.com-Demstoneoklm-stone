@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import User from '../models/User.model';
-import UserRequest from '../models/UserRequest.model';
+import { User } from '../models/User.model';
+import { UserRequest } from '../models/UserRequest.model';
 
 const profileController = {
     getUserProfile: async (req: Request, res: Response) => {

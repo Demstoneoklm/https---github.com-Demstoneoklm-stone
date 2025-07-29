@@ -1,14 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const User_model_1 = __importDefault(require("../models/User.model"));
-const UserRequest_model_1 = __importDefault(require("../models/UserRequest.model"));
+const User_model_1 = require("../models/User.model");
+const UserRequest_model_1 = require("../models/UserRequest.model");
 const profileController = {
     getUserProfile: async (req, res) => {
         try {
-            const user = await User_model_1.default.findByPk(req.user.id, {
+            const user = await User_model_1.User.findByPk(req.user.id, {
                 attributes: { exclude: ['password', 'verificationToken'] }
             });
             if (!user) {
@@ -23,7 +20,7 @@ const profileController = {
     updateUserProfile: async (req, res) => {
         const { firstName, lastName, phone } = req.body;
         try {
-            const user = await User_model_1.default.findByPk(req.user.id);
+            const user = await User_model_1.User.findByPk(req.user.id);
             if (!user) {
                 return res.status(404).json({ message: 'Utilisateur non trouvé.' });
             }
@@ -42,7 +39,7 @@ const profileController = {
     },
     getUserRequests: async (req, res) => {
         try {
-            const requests = await UserRequest_model_1.default.findAll({ where: { userId: req.user.id } });
+            const requests = await UserRequest_model_1.UserRequest.findAll({ where: { userId: req.user.id } });
             res.status(200).json(requests);
         }
         catch (error) {
@@ -52,7 +49,7 @@ const profileController = {
     createUserRequest: async (req, res) => {
         const { type, title, description } = req.body;
         try {
-            const newRequest = await UserRequest_model_1.default.create({
+            const newRequest = await UserRequest_model_1.UserRequest.create({
                 userId: req.user.id,
                 type,
                 title,

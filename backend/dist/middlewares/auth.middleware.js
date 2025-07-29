@@ -1,11 +1,8 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authorizeRoles = exports.authorizeAdmin = exports.authenticateToken = void 0;
 const auth_1 = require("../utils/auth");
-const User_model_1 = __importDefault(require("../models/User.model"));
+const User_model_1 = require("../models/User.model");
 const authenticateToken = async (req, res, next) => {
     try {
         // Récupérer le token depuis les cookies
@@ -18,7 +15,7 @@ const authenticateToken = async (req, res, next) => {
         // Vérifier le token
         const payload = (0, auth_1.verifyAccessToken)(token);
         // Récupérer les informations complètes de l'utilisateur
-        const user = await User_model_1.default.findByPk(payload.userId, {
+        const user = await User_model_1.User.findByPk(payload.userId, {
             attributes: ['id', 'email', 'firstName', 'lastName', 'role', 'isVerified']
         });
         if (!user) {

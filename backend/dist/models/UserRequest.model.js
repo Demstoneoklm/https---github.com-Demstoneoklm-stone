@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserRequest = void 0;
 const sequelize_1 = require("sequelize");
 class UserRequest extends sequelize_1.Model {
     static initialize(sequelize) {
@@ -67,4 +68,4 @@ class UserRequest extends sequelize_1.Model {
         return UserRequest;
     }
 }
-exports.default = UserRequest;
+exports.UserRequest = UserRequest;

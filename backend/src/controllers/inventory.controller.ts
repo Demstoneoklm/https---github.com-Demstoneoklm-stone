@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import InventoryItem from '../models/InventoryItem.model';
+import { InventoryItem } from '../models/InventoryItem.model';
 
 const inventoryController = {
     getInventoryItems: async (req: Request, res: Response) => {

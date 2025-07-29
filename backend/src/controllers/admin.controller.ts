@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import User from '../models/User.model';
-import Document from '../models/Document.model';
-import InventoryItem from '../models/InventoryItem.model';
-import UserRequest from '../models/UserRequest.model';
+import { User } from '../models/User.model';
+import { Document } from '../models/Document.model';
+import { InventoryItem } from '../models/InventoryItem.model';
+import { UserRequest } from '../models/UserRequest.model';
 import bcrypt from 'bcrypt';
 
 // Helper function to hash password

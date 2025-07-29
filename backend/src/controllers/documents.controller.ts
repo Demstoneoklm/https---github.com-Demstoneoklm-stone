@@ -1,7 +1,7 @@
 
 
 import { Request, Response } from 'express';
-import Document from '../models/Document.model';
+import { Document } from '../models/Document.model';
 import fs from 'fs';
 import path from 'path';
 
